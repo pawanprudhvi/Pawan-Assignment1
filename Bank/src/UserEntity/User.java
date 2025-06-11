@@ -4,15 +4,22 @@ public class User {
 	int aadhaarNumber;
 	String address;
 	long mobileNo;
-	public User(int aadhaarNumber, String address, long mobileNo, String name) {
-		super();
+	String branch;
+	public User(int aadhaarNumber, String address, long mobileNo, String name,String branch) {
 		this.aadhaarNumber = aadhaarNumber;
 		this.address = address;
 		this.mobileNo = mobileNo;
 		this.name = name;
+		this.branch=branch;
 	}
 	public String getName() {
 		return name;
+	}
+	public String getBranch() {
+		return branch;
+	}
+	public void setBranch(String branch) {
+		this.branch = branch;
 	}
 	public void setName(String name) {
 		this.name = name;

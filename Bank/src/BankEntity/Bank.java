@@ -34,10 +34,4 @@ public class Bank {
 			System.out.println(branch.getBranchName()+" \n");
 		}
 	}
-	
-	
-	
-	
-	
-
 }

@@ -1,16 +1,21 @@
 package Accounts;
 
-import AccountsInterface.AccountFunctions;
 import UserEntity.User;
 import java.time.LocalDate;
 
-public class SavingsAccount extends Account implements AccountFunctions {
+import CustomExceptions.WithdrawalLimitReachedException;
+
+public class SavingsAccount extends Account {
+	
+  private static final int withdrawalLimit=3;
   private double interest = 4.0;
+  private int withdrawMonthlyLimit;
 
   public SavingsAccount() {}
 
   public SavingsAccount(User user) {
     super(user);
+    this.withdrawMonthlyLimit=0;
   }
 
   @Override
@@ -31,15 +36,30 @@ public class SavingsAccount extends Account implements AccountFunctions {
   }
 
   @Override
-  public double withdraw(double amount) {
+  public double withdraw(double amount) { 
+	try
+	  {
+		
+		
     if (this.currentBalance >= amount) {
+      if(withdrawalLimit<=++withdrawMonthlyLimit) {
+   		 throw new WithdrawalLimitReachedException("Withdrawal limit reached");
+      }
       this.currentBalance -= amount;
+      if(amount<1000) {
+        	System.out.println("Minimum deposit should be 1000");
+        	currentBalance-=500;
+       }
       System.out.println("Amount withdrawn successfully \n Current Balance: "+this.currentBalance);
     } else {
-      System.out.println("Insufficient Funds");
+      throw new WithdrawalLimitReachedException("Withdrawal limit reached for this month");
     }
-
-    return currentBalance;
+	  }
+	catch(WithdrawalLimitReachedException e) {
+		System.out.println("Withdrawal limit reached");
+		
+	}
+	return currentBalance;
   }
   
   public double calculateInterest() {
@@ -55,7 +75,20 @@ public class SavingsAccount extends Account implements AccountFunctions {
   @Override
   public double deposit(double amount) {
     this.currentBalance += amount;
+    if(amount<1000) {
+    	System.out.println("Minimum deposit should be 1000");
+    }
     System.out.println("Amount successfullt deposited \n Current Balance: "+this.currentBalance);
     return amount;
   }
+  
+    @Override
+	public void displayDetails(Account account,Business business) {
+		System.out.println("Account created \n \n account number: "+account.getAccountNumber()+
+				"\n Account Name: "                                +account.getAccountHolderName()+
+				"\n Branch: "                                      +account.getUser().getBranch()+
+				"\n Aadhar Number: "                               +"**** **** "+account.getUser().getAadhaarNumber()+
+				"\n Account Type: "                                +account.typeOfAccount()+
+				"\n Current Balance: "                             +account.getCurrentBalance()+" \n Interest Rate: "+account.getInterestRate());	
+	}
 }
