@@ -1,7 +1,9 @@
 package BankInterface;
 
 import Accounts.Account;
+import Accounts.Business;
+import BankEntity.Bank;
 
 public interface bankInterface {	
-	public Account createBankAccount(String username,int aadhar,long mobileNo,String address,String accountType);
+	public Account openAccount(String username,int aadhar,long mobileNo,String address,String accountType,Business business);
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import Accounts.Account;
+import Accounts.Business;
 import AccountsInterface.AccountFactory;
 import BankEntity.Bank;
 import BankInterface.bankInterface;
@@ -18,10 +19,10 @@ public class Branch implements bankInterface {
 	HashMap<String,List<Account>> accountsForType;
 	Bank bank;
 	
-	public Branch(String branchName,Bank bank)
+	public Branch(String brsanchName,Bank bank)
 	{
 		accountsForType=new HashMap<>();	
-		this.branchName=branchName;
+		this.branchName=brsanchName;
 		this.bank=bank;
 	}
 	
@@ -33,19 +34,15 @@ public class Branch implements bankInterface {
 	}
 
 	@Override
-	public Account createBankAccount(String username, int aadhar, long mobileNo, String address,String accountType) {	
-		User user=new User(aadhar,address,mobileNo,username);
-		Account account=AccountFactory.getAccount(accountType,user);
+	public Account openAccount(String username, int aadhar, long mobileNo, String address,String accountType,Business business) {	
+		User user=new User(aadhar,address,mobileNo,username,this.branchName);
+		System.out.println(this.branchName);
+		Account account=AccountFactory.getAccount(accountType,user,business);
 		accountsForType.putIfAbsent(accountType, new ArrayList<>());
 		accountsForType.get(accountType).add(account);
-		bank.addNewBranch(this);	
-		displayDetails(account);
+		bank.addNewBranch(this);
 		return account;
 	
-	}
-
-	public void displayDetails(Account account) {
-		System.out.println("Account created \n \n account number: "+account.getAccountNumber()+"\n Account Name: "+account.getAccountHolderName()+"\n Aadhar Number: "+"**** **** "+account.getUser().getAadhaarNumber()+"\n Account Type: "+account.typeOfAccount()+" \n Current Balance: "+account.getCurrentBalance()+" \n Interest Rate: "+account.getInterestRate());	
 	}
 
 	public String getBranchName() {
@@ -56,7 +53,4 @@ public class Branch implements bankInterface {
 		this.branchName = branchName;
 	}
 	
-	
-	
-
 }
