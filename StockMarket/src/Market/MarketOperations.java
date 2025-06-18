@@ -4,7 +4,9 @@ import java.util.HashMap;
 
 import Entity.Stocks;
 import Entity.Trader;
+import Exceptions.InsufficientMarketSharesException;
 import Exceptions.InsufficientSharesException;
+import Exceptions.StockNotFoundException;
 
 public class MarketOperations implements marketInterface {
 	HashMap<Integer,Stocks> listOfStocks=new HashMap<>();
@@ -14,23 +16,28 @@ public class MarketOperations implements marketInterface {
 	}
 
 	@Override
-	public synchronized void buyStock(Trader trader,int stockId,int qty) throws InsufficientSharesException {
+	public synchronized void buyStock(Trader trader,int stockId,int qty) throws InsufficientMarketSharesException,StockNotFoundException {
 		Stocks buyingStock=listOfStocks.get(stockId);
+		if(buyingStock==null) {
+			throw new StockNotFoundException("No Stock found for this Stock ID");
+		}
+		System.out.println(buyingStock);
 		if(buyingStock.getAvailableShares()>=qty) {
 			trader.getPortfolio().put(buyingStock.getStockName(),trader.getPortfolio().getOrDefault(buyingStock.getStockName(),0)+qty);
-			System.out.println("Stocks successfully bought");
+			buyingStock.setAvailableShares(buyingStock.getAvailableShares()-qty);
+			System.out.println("Congrats "+trader.getTraderName()+"!stock successfully bought");
 		}
 		else {
-			throw new InsufficientSharesException("Selling quantity is more than available Quantity.");
+			throw new InsufficientMarketSharesException("No shares to buy");
 		}
 	}
 
 	@Override
-	public synchronized void sellStock(Trader trader,Stocks stock,int qty) throws InsufficientSharesException {
-		int availableStocks = trader.getPortfolio().getOrDefault(stock.getStockName(), 0);
-		Stocks sellingStock=listOfStocks.get(stock.getStockId());
-		if(availableStocks>=qty&&sellingStock.getAvailableShares()>=qty) {
-			trader.getPortfolio().put(stock.getStockName(),trader.getPortfolio().get(stock.getStockName())-qty);
+	public synchronized void sellStock(Trader trader,String stockName,int qty) throws InsufficientSharesException {
+		int availableStocks = trader.getPortfolio().getOrDefault(stockName,0);
+		System.out.println(availableStocks);
+		if(availableStocks>=qty) {
+			trader.getPortfolio().put(stockName,trader.getPortfolio().get(stockName)-qty);
 			System.out.println("Stocks successfully sold");
 		}
 		else {
