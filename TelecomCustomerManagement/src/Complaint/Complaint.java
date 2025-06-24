@@ -1,15 +1,15 @@
 package Complaint;
 
 public class Complaint {
-	private String complaintId;
+	private int complaintId=0;
     private String description;
 
-    public Complaint(String complaintId, String description) {
-        this.complaintId = complaintId;
+    public Complaint(String description) {
+    	complaintId++;
         this.description = description;
     }
 
-    public String getComplaintId() {
+    public int getComplaintId() {
         return complaintId;
     }
 
