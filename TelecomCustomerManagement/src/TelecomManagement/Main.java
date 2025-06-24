@@ -2,6 +2,7 @@ package TelecomManagement;
 
 import java.util.Scanner;
 
+import Complaint.Complaint;
 import Customer.Customer;
 import Customer.CustomersManager;
 
@@ -42,6 +43,58 @@ public class Main {
         choice=sc.nextLine();
         }
         manager.AllCustomers();
-    }	
+        
+        System.out.print("Do you want to subscribe to VAS?(Yes/No)");
+        String vasChoice=sc.nextLine();
+        if(vasChoice.equalsIgnoreCase("Yes")) {
+        System.out.print("Enter Customer ID: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+        Customer Vascustomer = manager.getCustomer(id);
+        if (Vascustomer!=null) {
+            System.out.println("Enter VAS to subscribe: ");
+            String vas = sc.nextLine();
+            Vascustomer.subscribetoVas(vas);
+            System.out.println("VAS Successfully Subscribed");
+        } else {
+            System.out.println("Customer not found.");
+        }
+        }
+        System.out.println("Do you want to unsubscribe to VAS?(Yes/No)");
+        String vasUnsubscribe=sc.nextLine();
+        if(vasUnsubscribe.equalsIgnoreCase("Yes")) {
+        System.out.print("Enter Customer ID: ");
+        int id=sc.nextInt();
+        sc.nextLine();
+        Customer customer = manager.getCustomer(id);
+        if (customer!=null) {
+            System.out.println("Enter VAS to unsubscribe: ");
+            String vas = sc.nextLine();
+            customer.removeVasSubscription(vas);
+            System.out.println("VAS unsubscribed");
+        } else {
+            System.out.println("Customer not found.");
+        }
+    }
 	
+        System.out.println("Do you want to file a complaint?(Yes/No)");
+        String complaints=sc.nextLine();
+        if(complaints.equalsIgnoreCase("Yes")) {
+	        System.out.print("Enter Customer ID: ");
+	        int id=sc.nextInt();
+	        sc.nextLine();
+	        Customer customer = manager.getCustomer(id);
+	        if (customer != null) {
+	            System.out.print("Enter complaint description: ");
+	            String desc = sc.nextLine();
+	            Complaint complaint=new Complaint(desc);
+	            customer.addComplaint(complaint);
+	            System.out.print("Complaint filed");
+        } 
+	    else {
+            System.out.println("Customer not found.");
+        }
+      }
+        manager.AllCustomers();
+	}
 }
